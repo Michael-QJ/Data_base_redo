@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Class Project Groups — mockup</title>
+  <style>
+    :root {
+      --bg: #eef2f6;
+      --card: #ffffff;
+      --ink: #1a2332;
+      --muted: #5c6b7c;
+      --line: #d7e0e8;
+      --accent: #1e4d78;
+      --analyst: #1a6b86;
+      --builder: #b86112;
+      --presenter: #1d7a46;
+      --warn-bg: #fff6eb;
+      --warn-ink: #8a3d00;
+      --warn-line: #e8b56a;
+      --shadow: 0 1px 2px rgba(26, 35, 50, 0.05), 0 8px 24px rgba(26, 35, 50, 0.05);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Segoe UI", system-ui, sans-serif;
+      line-height: 1.45;
+    }
+
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 3rem;
+    }
+
+    .mockup-banner {
+      margin: 0 0 1.25rem;
+      padding: 0.7rem 0.9rem;
+      background: #1a2332;
+      color: #f4f7fa;
+      border-radius: 10px;
+      font-size: 0.95rem;
+    }
+
+    .mockup-banner strong { font-weight: 650; }
+
+    header.page h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.85rem;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    .lede {
+      margin: 0;
+      max-width: 42rem;
+      color: var(--muted);
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.85rem;
+      margin: 1.35rem 0 0.7rem;
+    }
+
+    .stat {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 0.95rem 1rem 0.85rem;
+    }
+
+    .stat-value {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+    }
+
+    .stat-label {
+      margin: 0.25rem 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .stat-warn {
+      background: var(--warn-bg);
+      border-color: var(--warn-line);
+    }
+
+    .stat-warn .stat-value,
+    .stat-warn .stat-label { color: var(--warn-ink); }
+
+    .size-note {
+      margin: 0 0 1.5rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .groups-heading {
+      margin: 0 0 0.75rem;
+      font-size: 1.15rem;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem 1.25rem;
+      margin: 0 0 0.9rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .swatch {
+      display: inline-block;
+      width: 0.7rem;
+      height: 0.7rem;
+      margin-right: 0.35rem;
+      border-radius: 2px;
+      vertical-align: -0.05rem;
+    }
+
+    .swatch.analyst { background: var(--analyst); }
+    .swatch.builder { background: var(--builder); }
+    .swatch.presenter { background: var(--presenter); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 0.85rem;
+    }
+
+    .group {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 0.95rem 1rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .group.is-missing {
+      background: var(--warn-bg);
+      border-color: var(--warn-line);
+    }
+
+    .group-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.75rem;
+    }
+
+    .group h3 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .count {
+      margin: 0;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+      font-size: 0.92rem;
+      white-space: nowrap;
+    }
+
+    .warning {
+      margin: 0;
+      color: var(--warn-ink);
+      font-weight: 650;
+      font-size: 0.92rem;
+    }
+
+    .members {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .members li {
+      padding: 0.15rem 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .group.is-missing .members li { border-bottom-color: #f0ddc4; }
+
+    .members li:last-child { border-bottom: 0; }
+
+    .kinds-label {
+      margin: 0;
+      font-size: 0.78rem;
+      font-weight: 650;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .kinds {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .kind {
+      display: grid;
+      grid-template-columns: 6.6rem 1.4rem 1fr;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.92rem;
+    }
+
+    .kind-name { color: var(--ink); }
+
+    .kind-count {
+      text-align: right;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .track {
+      height: 0.55rem;
+      background: #e4ebf1;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .group.is-missing .track { background: #f3e4d2; }
+
+    .fill {
+      display: block;
+      height: 100%;
+      border-radius: 999px;
+    }
+
+    .fill.analyst { background: var(--analyst); }
+    .fill.builder { background: var(--builder); }
+    .fill.presenter { background: var(--presenter); }
+
+    .footnote {
+      margin: 1.25rem 0 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    @media (max-width: 720px) {
+      .summary { grid-template-columns: 1fr; }
+      header.page h1 { font-size: 1.55rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <p class="mockup-banner"><strong>Mockup with invented data.</strong> Student names, group assignments, and kind counts on this page are made-up examples.</p>
+
+    <header class="page">
+      <h1>Class Project Groups</h1>
+      <p class="lede">Group lists show member names only. The three student kinds — Analyst, Builder, and Presenter — are summarized for each group.</p>
+    </header>
+
+    <section class="summary" aria-label="Class summary">
+      <article class="stat">
+        <p class="stat-value">30</p>
+        <p class="stat-label">Students</p>
+      </article>
+      <article class="stat">
+        <p class="stat-value">8</p>
+        <p class="stat-label">Groups</p>
+      </article>
+      <article class="stat stat-warn">
+        <p class="stat-value">3</p>
+        <p class="stat-label">Groups missing a kind</p>
+      </article>
+    </section>
+    <p class="size-note">Six groups have 4 students and two groups have 3. Bar length is that kind’s share of the group.</p>
+
+    <h2 class="groups-heading">Groups</h2>
+    <p class="legend">
+      <span><i class="swatch analyst" aria-hidden="true"></i>Analyst</span>
+      <span><i class="swatch builder" aria-hidden="true"></i>Builder</span>
+      <span><i class="swatch presenter" aria-hidden="true"></i>Presenter</span>
+    </p>
+
+    <div class="grid">
+      <article class="group">
+        <div class="group-head">
+          <h3>Group 1</h3>
+          <p class="count">4 students</p>
+        </div>
+        <ul class="members">
+          <li>Maya Chen</li>
+          <li>Jordan Hale</li>
+          <li>Priya Shah</li>
+          <li>Owen Brooks</li>
+        </ul>
+        <p class="kinds-label">Student kinds</p>
+        <div class="kinds">
+          <div class="kind">
+            <span class="kind-name">Analyst</span>
+            <span class="kind-count">2</span>
+            <div class="track" role="img" aria-label="Analyst: 2 of 4"><span class="fill analyst" style="width: 50%"></span></div>
+          </div>
+          <div class="kind">
+            <span class="kind-name">Builder</span>
+            <span class="kind-count">1</span>
+            <div class="track" role="img" aria-label="Builder: 1 of 4"><span class="fill builder" style="width: 25%"></span></div>
+          </div>
+          <div class="kind">
+            <span class="kind-name">Presenter</span>
+            <span class="kind-count">1</span>
+            <div class="track" role="img" aria-label="Presenter: 1 of 4"><span class="fill presenter" style="width: 25%"></span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="group">
+        <div class="group-head">
+          <h3>Group 2</h3>
+          <p class="count">4 students</p>
+        </div>
+        <ul class="members">
+          <li>Elena Vasquez</li>
+          <li>Noah Kim</li>
+          <li>Aisha Rahman</li>
+          <li>Liam Patel</li>
+        </ul>
+        <p class="kinds-label">Student kinds</p>
+        <div class="kinds">
+          <div class="kind">
+            <span class="kind-name">Analyst</span>
+            <span class="kind-count">1</span>
+            <div class="track" role="img" aria-label="Analyst: 1 of 4"><span class="fill analyst" style="width: 25%"></span></div>
+          </div>
+          <div class="kind">
+            <span class="kind-name">Builder</span>
+            <span class="kind-count">2</span>
+            <div class="track" role="img" aria-label="Builder: 2 of 4"><span class="fill builder" style="width: 50%"></span></div>
+          </div>
+          <div class="kind">
+            <span class="kind-name">Presenter</span>
+            <span class="kind-count">1</span>
+            <div class="track" role="img" aria-label="Presenter: 1 of 4"><span class="fill presenter" style="width: 25%"></span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="group">
+        <div class="group-head">
+          <h3>Group 3</h3>
+          <p class="count">4 students</p>
+        </div>
+        <ul class="members">
+          <li>Sofia Nguyen</li>
+          <li>Marcus Reid</li>
+          <li>Hannah Cole</li>
+          <li>Diego Alvarez</li>
+        </ul>
+        <p class="kinds-label">Student kinds</p>
+        <div class="kinds">
+          <div class="kind">
+            <span class="kind-name">Analyst</span>
+            <span class="kind-count">1</span>
+            <div class="track" role="img" aria-label="Analyst: 1 of 4"><span class="fill analyst" style="width: 25%"></span></div>
+          </div>
+          <div class="kind">
+            <span class="kind-name">Builder</span>
+            <span class="kind-count">1</span>
+            <div class="track" role="img" aria-label="Builder: 1 of 4"><span class="fill builder" style="width: 25%"></span></div>
+          </div>
+          <div class="kind">
+            <span class="kind-name">Presenter</span>
+            <span class="kind-count">2</span>
+            <div class="track" role="img" aria-label="Presenter: 2 of 4"><span class="fill presenter" style="width: 50%"></span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="group">
+        <div class="group-head">
+          <h3>Group 4</h3>
+          <p class="count">4 students</p>
+        </div>
+        <ul class="members">
+          <li>Chloe Park</li>
+          <li>Ethan Walsh</li>
+          <li>Amara Singh</li>
+          <li>Lucas Ferreira</li>
+        </ul>
+        <p class="kinds-label">Student kinds</p>
+        <div class="kinds">
+          <div class="kind">
+            <span class="kind-name">Analyst</span>
+            <span class="kind-count">2</span>
+            <div class="track" role="img" aria-label="Analyst: 2 of 4"><span class="fill analyst" style="width: 50%"></span></div>
+          </div>
+          <div class="kind">
+            <span class="kind-name">Builder</span>
+            <span class="kind-count">1</span>
+            <div class="track" role="img" aria-label="Builder: 1 of 4"><span class="fill builder" style="width: 25%"></span></div>
+          </div>
+          <div class="kind">
+            <span class="kind-name">Presenter</span>
+            <span class="kind-count">1</span>
+            <div class="track" role="img" aria-label="Presenter: 1 of 4"><span class="fill presenter" style="width: 25%"></span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="group is-missing">
+        <div class="group-head">
+          <h3>Group 5</h3>
+          <p class="count">4 students</p>
+        </div>
+        <p class="warning">Warning: this group is missing Presenter.</p>
+        <ul class="members">
+          <li>Grace Okonkwo</li>
+          <li>Benjamin Torres</li>
+          <li>Isla Murphy</li>
+          <li>Caleb Nguyen</li>
+        </ul>
+        <p class="kinds-label">Student kinds</p>
+        <div class="kinds">
+          <div class="kind">
+            <span class="kind-name">Analyst</span>
+            <span class="kind-count">2</span>
+            <div class="track" role="img" aria-label="Analyst: 2 of 4"><span class="fill analyst" style="width: 50%"></span></div>
+          </div>
+          <div class="kind">
+            <span class="kind-name">Builder</span>
+            <span class="kind-count">2</span>
+            <div class="track" role="img" aria-label="Builder: 2 of 4"><span class="fill builder" style="width: 50%"></span></div>
+          </div>
+          <div class="kind">
+            <span class="kind-name">Presenter</span>
+            <span class="kind-count">0</span>
+            <div class="track" role="img" aria-label="Presenter: 0 of 4"><span class="fill presenter" style="width: 0%"></span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="group is-missing">
+        <div class="group-head">
+          <h3>Group 6</h3>
+          <p class="count">4 students</p>
+        </div>
+        <p class="warning">Warning: this group is missing Analyst.</p>
+        <ul class="members">
+          <li>Nora Johansson</li>
+          <li>Samuel Wright</li>
+          <li>Leila Haddad</li>
+          <li>Felix Berg</li>
+        </ul>
+        <p class="kinds-label">Student kinds</p>
+        <div class="kinds">
+          <div class="kind">
+            <span class="kind-name">Analyst</span>
+            <span class="kind-count">0</span>
+            <div class="track" role="img" aria-label="Analyst: 0 of 4"><span class="fill analyst" style="width: 0%"></span></div>
+          </div>
+          <div class="kind">
+            <span class="kind-name">Builder</span>
+            <span class="kind-count">2</span>
+            <div class="track" role="img" aria-label="Builder: 2 of 4"><span class="fill builder" style="width: 50%"></span></div>
+          </div>
+          <div class="kind">
+            <span class="kind-name">Presenter</span>
+            <span class="kind-count">2</span>
+            <div class="track" role="img" aria-label="Presenter: 2 of 4"><span class="fill presenter" style="width: 50%"></span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="group">
+        <div class="group-head">
+          <h3>Group 7</h3>
+          <p class="count">3 students</p>
+        </div>
+        <ul class="members">
+          <li>Zoe Martin</li>
+          <li>Arjun Mehta</li>
+          <li>Harper Quinn</li>
+        </ul>
+        <p class="kinds-label">Student kinds</p>
+        <div class="kinds">
+          <div class="kind">
+            <span class="kind-name">Analyst</span>
+            <span class="kind-count">1</span>
+            <div class="track" role="img" aria-label="Analyst: 1 of 3"><span class="fill analyst" style="width: 33.33%"></span></div>
+          </div>
+          <div class="kind">
+            <span class="kind-name">Builder</span>
+            <span class="kind-count">1</span>
+            <div class="track" role="img" aria-label="Builder: 1 of 3"><span class="fill builder" style="width: 33.33%"></span></div>
+          </div>
+          <div class="kind">
+            <span class="kind-name">Presenter</span>
+            <span class="kind-count">1</span>
+            <div class="track" role="img" aria-label="Presenter: 1 of 3"><span class="fill presenter" style="width: 33.33%"></span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="group is-missing">
+        <div class="group-head">
+          <h3>Group 8</h3>
+          <p class="count">3 students</p>
+        </div>
+        <p class="warning">Warning: this group is missing Presenter.</p>
+        <ul class="members">
+          <li>Ivy Laurent</li>
+          <li>Mateo Cruz</li>
+          <li>Ruby Sanders</li>
+        </ul>
+        <p class="kinds-label">Student kinds</p>
+        <div class="kinds">
+          <div class="kind">
+            <span class="kind-name">Analyst</span>
+            <span class="kind-count">2</span>
+            <div class="track" role="img" aria-label="Analyst: 2 of 3"><span class="fill analyst" style="width: 66.67%"></span></div>
+          </div>
+          <div class="kind">
+            <span class="kind-name">Builder</span>
+            <span class="kind-count">1</span>
+            <div class="track" role="img" aria-label="Builder: 1 of 3"><span class="fill builder" style="width: 33.33%"></span></div>
+          </div>
+          <div class="kind">
+            <span class="kind-name">Presenter</span>
+            <span class="kind-count">0</span>
+            <div class="track" role="img" aria-label="Presenter: 0 of 3"><span class="fill presenter" style="width: 0%"></span></div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <p class="footnote">Invented example only. Kind counts in each group add up to that group’s student count. Across all groups there are 11 Analysts, 11 Builders, and 8 Presenters (30 students). Groups 5, 6, and 8 are the three groups missing a kind.</p>
+  </div>
+</body>
+</html>
